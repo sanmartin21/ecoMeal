@@ -1,0 +1,180 @@
+<div class="container d-flex justify-content-start mt-5">
+    <form class="row g-3 needs-validation" novalidate action="index.php?pg=aluno&act={{act}}" method="post"
+        enctype="multipart/form-data">
+        <div class="col-md-4" style="display: none">
+            <label class="form-label">Id</label>
+            <input type="text" class="form-control" name="id" value="{{id}}">
+        </div>
+
+        <div class="col-md-5 offset-md-3 mt-4">
+            <div class="d-flex justify-content-center align-items-center">
+                <label class="form-label" style="font-size: 18px; font-weight: bold; margin-right: 10px;"
+                    id="goEatLabel">Aluno irá comer?</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="goEat" id="validationCustom07" value="1"
+                        required>
+                    <label class="form-check-label" for="validationCustom07">Sim</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="goEat" id="validationCustom08" value="2"
+                        required>
+                    <label class="form-check-label" for="validationCustom08">Não</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="validationCustom01" class="form-label">Nome do Aluno</label>
+            <input autofocus type="text" class="form-control" id="validationCustom01" value="{{name}}" required
+                name="name">
+        </div>
+
+        <div class="col-md-6">
+            <label for="validationCustom02" class="form-label">Turma</label>
+            <input autofocus type="text" class="form-control" id="validationCustom02" value="{{turma}}" required
+                name="turma">
+        </div>
+
+        <div class="col-md-6">
+            <label for="validationCustom04" class="form-label">Idade</label>
+            <input autofocus type="number" class="form-control" id="validationCustom04" value="{{idade}}" required
+                name="idade" min="1" max="110">
+        </div>
+
+        <div class="col-md-6">
+            <label for="validationCustom05" class="form-label">Sexo</label>
+            <select class="form-control" id="validationCustom05" name="sexo" value="{{sexo}}" required name="sexo">
+                <option value="">Selecione</option>
+                <option value="1">Feminino</option>
+                <option value="2">Masculino</option>
+            </select>
+        </div>
+
+        <div class="col-md-12">
+            <label for="validationCustom03" class="form-label">Imagem</label>
+            <input type="file" class="form-control" id="validationCustom03" name="image" {{required}}>
+            <div class="invalid-feedback">
+                Por favor informe um arquivo válido.
+            </div>
+        </div>
+        <div class="col-15">
+            <img src="{{imageurl}}" alt="" style="width: 200px; height: 200px;">
+        </div>
+
+        <div class="col-md-12">
+            <label for="validationCustom06" class="form-label">Descrição</label>
+            <textarea rows="5" type="text" class="form-control" id="validationCustom06" name="info">{{info}}</textarea>
+            <div class="invalid-feedback">
+                Informe uma descrição referente ao Aluno.
+            </div>
+        </div>
+        
+        <div class="col-14 mb-3">
+            <button class="btn btn-primary" type="submit">
+                <span class="p-1"><i class="fa-solid fa-check fa-xl"></i></span>
+                Confirmar
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+
+    // Obtém o elemento select pelo ID
+    const selectElement = document.getElementById('validationCustom05');
+
+    // Obtém os elementos de input radio pelo nome
+    const radioElements = document.querySelectorAll('input[name="goEat"]');
+
+    // Verifica se há um valor salvo no atributo 'value' do elemento 'sexo'
+    const savedSexoValue = selectElement.getAttribute('value');
+
+    // Verifica se há um valor salvo no localStorage para 'goEat'
+    const savedAlunoGoEatValue = localStorage.getItem('goEat');
+
+
+    if (savedAlunoGoEatValue) {
+        // Define o valor salvo como o radio button selecionado
+        radioElements.forEach((radio) => {
+            if (radio.value === savedAlunoGoEatValue) {
+                radio.checked = true;
+            }
+
+            const goEatLabel = document.getElementById('goEatLabel');
+            goEatLabel.classList.remove('green-label', 'red-label');
+
+            if (savedAlunoGoEatValue === '1') {
+                goEatLabel.classList.add('green-label');
+            }
+            else {
+                goEatLabel.classList.add('red-label');
+            }
+
+        });
+    }
+
+    if (savedSexoValue) {
+        // Define o valor salvo como a opção selecionada
+        selectElement.value = savedSexoValue;
+    }
+
+
+    // Adiciona um ouvinte de evento para detectar alterações na seleção do 'sexo'
+    selectElement.addEventListener('change', function () {
+        // Obtém o valor selecionado
+        const selectedSexoValue = selectElement.value;
+        // Salva o valor selecionado no atributo 'value' do elemento 'sexo'
+        selectElement.setAttribute('value', selectedSexoValue);
+    });
+
+    // Adiciona um ouvinte de evento para detectar alterações na seleção do 'goEat'
+    radioElements.forEach((radio) => {
+        radio.addEventListener('change', function () {
+            // Obtém o valor selecionado
+            const selectedAlunoGoEatValue = radio.value;
+            // Salva o valor selecionado no armazenamento local (localStorage)
+            localStorage.setItem('goEat', selectedAlunoGoEatValue);
+
+            // Adiciona ou remove classes no label com base no valor selecionado
+            const goEatLabel = document.getElementById('goEatLabel');
+            goEatLabel.classList.remove('green-label', 'red-label');
+            if (selectedAlunoGoEatValue === '1') {
+                goEatLabel.classList.add('green-label');
+            } else {
+                goEatLabel.classList.add('red-label');
+            }
+        });
+    });
+
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+
+    document.getElementById("admin").classList.add('active');
+</script>
+
+<style>
+    .green-label {
+        color: rgb(0, 255, 0);
+    }
+
+    .red-label {
+        color: rgb(255, 0, 0);
+    }
+</style>
